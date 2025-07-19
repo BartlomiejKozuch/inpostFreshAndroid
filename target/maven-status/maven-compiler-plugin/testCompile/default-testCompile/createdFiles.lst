@@ -1,0 +1,7 @@
+pages\ConfirmationPage.class
+utils\Helpers.class
+pages\ProductPage.class
+pages\LoginPage.class
+utils\BaseTest.class
+tests\LoginTest.class
+config\ConfigMenager.class
