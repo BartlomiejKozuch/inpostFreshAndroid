@@ -1,0 +1,74 @@
+package pages;
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.pagefactory.AndroidFindBy;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
+import utils.BaseTest;
+
+import java.time.Duration;
+
+public class HomePage extends BaseTest {
+
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text='PRODUCTS']")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement productsHeader;
+
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc='test-Menu']")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement menuButton;
+
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc='test-Cart']")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement cartButton;
+
+    @AndroidFindBy(xpath = "//android.widget.ScrollView[@content-desc='test-PRODUCTS']")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement productList;
+
+    @AndroidFindBy(xpath = "(//android.view.ViewGroup[@content-desc='test-ADD TO CART'])[1]")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement firstAddToCartButton;
+
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text='PRODUCTS']/preceding-sibling::android.view.ViewGroup[1]")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement shopTabButton;
+
+    public HomePage(AppiumDriver driver) {
+        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+    }
+
+    public boolean isProductsHeaderVisible() {
+        try {
+            return productsHeader.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isMenuButtonVisible() {
+        try {
+            return menuButton.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void openCart() {
+        cartButton.click();
+    }
+
+    private void openMenu() {
+        menuButton.click();
+    }
+
+    private void openShopTab() {
+        shopTabButton.click();
+    }
+
+    public void addFirstProductToCart() {
+        firstAddToCartButton.click();
+    }
+}

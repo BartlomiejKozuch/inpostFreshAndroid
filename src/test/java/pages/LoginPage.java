@@ -1,41 +1,50 @@
 package pages;
 
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
-import utils.BaseTest;
+import io.appium.java_client.pagefactory.AndroidFindBy;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 
-public class LoginPage extends BaseTest {
+import java.time.Duration;
 
-    private final AppiumDriver driver;
+public class LoginPage  {
 
-    private final By usernameField = AppiumBy.accessibilityId("test-Username");
-    private final By passwordField = AppiumBy.accessibilityId("test-Password");
-    private final By loginButton   = AppiumBy.accessibilityId("test-LOGIN");
+    @AndroidFindBy(xpath = "//android.widget.EditText[@content-desc='test-Username']")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement usernameInput;
+
+    @AndroidFindBy(xpath = "//android.widget.EditText[@content-desc='test-Password']")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement passwordInput;
+
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc='test-LOGIN']")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement loginButton;
 
     public LoginPage(AppiumDriver driver) {
-        this.driver = driver;
+        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     public void login(String username, String password) {
         enterCredentials(username, password);
-        driver.findElement(loginButton).click();
+        loginButton.click();
         try {
-            Thread.sleep(5000);
+            Thread.sleep(5000);  // DO zmiany później
         } catch (InterruptedException e) {
             e.printStackTrace();
-
         }
     }
 
     private void enterCredentials(String username, String password) {
-        driver.findElement(usernameField).sendKeys(username);
-        driver.findElement(passwordField).sendKeys(password);
+        usernameInput.sendKeys(username);
+        passwordInput.sendKeys(password);
     }
 
     public boolean isLoginButtonVisible() {
         try {
-            return driver.findElement(loginButton).isDisplayed();
+            return loginButton.isDisplayed();
         } catch (Exception e) {
             return false;
         }
