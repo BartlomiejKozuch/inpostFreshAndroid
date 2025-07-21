@@ -1,4 +1,5 @@
 package tests;
+import config.ConfigMenager;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -6,6 +7,10 @@ import pages.CheckoutPage;
 import pages.HomePage;
 import pages.LoginPage;
 import utils.BaseTest;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AppTests extends BaseTest {
 
@@ -20,17 +25,30 @@ public class AppTests extends BaseTest {
         checkoutPage = new CheckoutPage(driver);
     }
 
+
     @Test(priority = 1)
     public void successfulLoginNavigatesToHome() {
-        loginPage.login("standard_user", "secret_sauce");
+        loginPage.login( ConfigMenager.getUser("normal.user"), ConfigMenager.getUser("password"));
         Assert.assertTrue(homePage.isMenuButtonVisible(), "Menu button should be visible after login");
     }
 
     @Test(priority = 2)
+    public void productsAreSortedByPriceLowToHigh() {
+        homePage.sortByPriceLowToHigh();
+        List<Double> prices = homePage.getVisibleProductPrices();
+        List<Double> sorted = new ArrayList<>(prices);
+        Collections.sort(sorted);
+        Assert.assertEquals(prices, sorted, "Prices are not sorted Low to High");
+    }
+
+    @Test(priority = 3)
     public void userCanAddItemToCartAndCheckout() {
+        String expectedTitle = homePage.getFirstProductTitle();
+        String expectedPrice = homePage.getFirstProductPrice();
+
         homePage.addFirstProductToCart();
         homePage.openCart();
-        checkoutPage.proceedToCheckout("Jakub", "Zembrowski", "00-001");
+        checkoutPage.proceedToCheckout("Jakub", "Zembrowski", "00-001", expectedTitle, expectedPrice);
         Assert.assertTrue(checkoutPage.isCheckoutComplete(), "Checkout should complete successfully");
     }
 }

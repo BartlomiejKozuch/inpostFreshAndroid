@@ -20,14 +20,14 @@ public class BaseTest {
     public void setUp() throws Exception {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        String appPath = ConfigMenager.get("app.path");
+        String appPath = ConfigMenager.getConfig("app.path");
         if (!Paths.get(appPath).isAbsolute()) {
             appPath = System.getProperty("user.dir") + "/" + appPath;
         }
 
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, ConfigMenager.get("platform.name"));
-        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, ConfigMenager.get("device.name"));
-        capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, ConfigMenager.get("automation.name"));
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, ConfigMenager.getConfig("platform.name"));
+        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, ConfigMenager.getConfig("device.name"));
+        capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, ConfigMenager.getConfig("automation.name"));
         capabilities.setCapability("appWaitActivity", "com.swaglabsmobileapp.*");
         capabilities.setCapability(MobileCapabilityType.APP, appPath);
 
@@ -36,21 +36,19 @@ public class BaseTest {
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/"), capabilities);
 
         System.out.println("Driver ON");
+
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(d -> ((AndroidDriver) d).getSessionId() != null);
-        try {
-            Thread.sleep(10_000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
 
-        }
+        Helpers helpers = new Helpers(driver);
+        helpers.waitForElementVisible(new pages.LoginPage(driver).loginButton, 5);
     }
 
     @AfterClass
     public void tearDown() {
         if (driver != null) {
             driver.quit();
-            System.out.println(">>> Driver zamknięty.");
+            System.out.println(">>> Driver OFF.");
         }
     }
 }

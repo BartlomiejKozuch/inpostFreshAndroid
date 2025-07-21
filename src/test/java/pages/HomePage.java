@@ -9,6 +9,8 @@ import org.openqa.selenium.support.PageFactory;
 import utils.BaseTest;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HomePage extends BaseTest {
 
@@ -36,6 +38,28 @@ public class HomePage extends BaseTest {
     @iOSXCUITFindBy(xpath = "TODO")
     private WebElement shopTabButton;
 
+    @AndroidFindBy(xpath = "(//android.widget.TextView[@content-desc='test-Item title'])[1]")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement firstProductTitle;
+
+    @AndroidFindBy(xpath = "(//android.widget.TextView[@content-desc='test-Price'])[1]")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement firstProductPrice;
+
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc='test-Modal Selector Button']")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private WebElement sortButton;
+
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text='Price (low to high)']")
+    @iOSXCUITFindBy(xpath = "TODO")
+
+    private WebElement sortLowToHighOption;
+
+    @AndroidFindBy(xpath = "//android.widget.TextView[contains(@text,'$')]")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private List<WebElement> productPrices;
+
+
     public HomePage(AppiumDriver driver) {
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
@@ -60,6 +84,20 @@ public class HomePage extends BaseTest {
         cartButton.click();
     }
 
+    public void sortByPriceLowToHigh() {
+        sortButton.click();
+        sortLowToHighOption.click();
+    }
+
+    public List<Double> getVisibleProductPrices() {
+        return productPrices.stream()
+                .map(WebElement::getText)
+                .map(text -> text.replace("$", ""))
+                .map(Double::parseDouble)
+                .collect(Collectors.toList());
+    }
+
+
     private void openMenu() {
         menuButton.click();
     }
@@ -70,5 +108,13 @@ public class HomePage extends BaseTest {
 
     public void addFirstProductToCart() {
         firstAddToCartButton.click();
+    }
+
+    public String getFirstProductTitle() {
+        return firstProductTitle.getText();
+    }
+
+    public String getFirstProductPrice() {
+        return firstProductPrice.getText();
     }
 }

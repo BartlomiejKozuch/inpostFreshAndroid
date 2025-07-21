@@ -7,12 +7,15 @@ import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 import utils.Helpers;
 
 import java.time.Duration;
+import java.util.List;
 
 public class CheckoutPage {
 
+    private final AppiumDriver driver;
     private final Helpers helpers;
 
     @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc='test-CHECKOUT']")
@@ -43,14 +46,19 @@ public class CheckoutPage {
     @iOSXCUITFindBy(xpath = "TODO")
     private WebElement checkoutCompleteHeader;
 
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc='test-Error message']/android.widget.TextView")
+    @iOSXCUITFindBy(xpath = "TODO")
+    private static WebElement checkoutErrorMessage;
+
     public CheckoutPage(AppiumDriver driver) {
+        this.driver = driver;
         this.helpers = new Helpers(driver);
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
-    public void proceedToCheckout(String firstName, String lastName, String zipCode) {
+    public void proceedToCheckout(String firstName, String lastName, String zipCode, String expectedTitle, String expectedPrice) {
         startCheckout();
-        fillCheckoutForm(firstName, lastName, zipCode);
+        fillCheckoutForm(firstName, lastName, zipCode, expectedTitle, expectedPrice);
         finishCheckout();
     }
 
@@ -62,15 +70,52 @@ public class CheckoutPage {
         }
     }
 
-    private void startCheckout() {
+    public static String getCheckoutErrorMessage() {
+        try {
+            return checkoutErrorMessage.getText();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void errorMessageCheckout(String firstName, String lastName, String zipCode) {
+
+        List<Runnable> steps = List.of(
+                () -> {
+                },
+                () -> firstNameInput.sendKeys(firstName),
+                () -> lastNameInput.sendKeys(lastName)
+        );
+
+        List<String> expectedErrors = List.of(
+                "First Name is required",
+                "Last Name is required",
+                "Postal Code is required"
+        );
+
+        for (int i = 0; i < steps.size(); i++) {
+            steps.get(i).run();
+            continueButton.click();
+            String actualError = CheckoutPage.getCheckoutErrorMessage();
+            Assert.assertEquals(actualError, expectedErrors.get(i), "Nieprawidłowy komunikat błędu na kroku " + (i + 1));
+        }
+        zipCodeInput.sendKeys(zipCode);
+        ;
+        continueButton.click();
+    }
+
+    public void startCheckout() {
         checkoutButton.click();
     }
 
-    private void fillCheckoutForm(String firstName, String lastName, String zipCode) {
+    private void fillCheckoutForm(String firstName, String lastName, String zipCode, String expectedTitle, String expectedPrice) {
         firstNameInput.sendKeys(firstName);
         lastNameInput.sendKeys(lastName);
         zipCodeInput.sendKeys(zipCode);
         continueButton.click();
+
+        CheckoutOverviewPage checkoutOverview = new CheckoutOverviewPage(driver);
+        checkoutOverview.verifyProductDetails(0, expectedTitle, expectedPrice);
     }
 
     private void finishCheckout() {
