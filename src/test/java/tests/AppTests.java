@@ -26,13 +26,13 @@ public class AppTests extends BaseTest {
     }
 
 
-    @Test(priority = 1)
+    @Test(priority = 1, description = "Verifies that a user can log in with valid credentials and is navigated to the home screen.")
     public void successfulLoginNavigatesToHome() {
         loginPage.login( ConfigMenager.getUser("normal.user"), ConfigMenager.getUser("password"));
         Assert.assertTrue(homePage.isMenuButtonVisible(), "Menu button should be visible after login");
     }
 
-    @Test(priority = 2)
+    @Test(priority = 2, description ="Checks that products are correctly sorted in ascending order by price.")
     public void productsAreSortedByPriceLowToHigh() {
         homePage.sortByPriceLowToHigh();
         List<Double> prices = homePage.getVisibleProductPrices();
@@ -41,7 +41,7 @@ public class AppTests extends BaseTest {
         Assert.assertEquals(prices, sorted, "Prices are not sorted Low to High");
     }
 
-    @Test(priority = 3)
+    @Test(priority = 3, description = "Tests the complete purchase flow from adding an item to the cart through successful checkout.")
     public void userCanAddItemToCartAndCheckout() {
         String expectedTitle = homePage.getFirstProductTitle();
         String expectedPrice = homePage.getFirstProductPrice();

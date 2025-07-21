@@ -22,10 +22,9 @@ public class Helpers {
     }
 
     public void scrollToElement(By locator, int maxScroll) {
-        int maxScrolls = maxScroll;
         int scrolls = 0;
 
-        while (scrolls < maxScrolls) {
+        while (scrolls < maxScroll) {
             try {
                 WebElement element = driver.findElement(locator);
                 if (element.isDisplayed()) {
@@ -42,7 +41,7 @@ public class Helpers {
             scrolls++;
         }
 
-        throw new RuntimeException("Nie znaleziono elementu po " + maxScrolls + " scrollach: " + locator);
+        throw new RuntimeException("Don't find element " + locator + " scrollach: " + maxScroll);
     }
 
     public void waitForElementVisible(WebElement element, int seconds) {

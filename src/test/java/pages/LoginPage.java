@@ -6,7 +6,6 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
@@ -36,28 +35,13 @@ public class LoginPage {
     @iOSXCUITFindBy(xpath = "TODO")
     private WebElement errorMessage;
 
-    private final AppiumDriver driver;
-
     public LoginPage(AppiumDriver driver) {
-        this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     public void login(String username, String password) {
         enterCredentials(username, password);
         loginButton.click();
-        try {
-            Thread.sleep(2000); // tymczasowy sleep
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void enterCredentials(String username, String password) {
-        usernameInput.clear();
-        usernameInput.sendKeys(username);
-        passwordInput.clear();
-        passwordInput.sendKeys(password);
     }
 
     public boolean isLoginButtonVisible() {
@@ -79,6 +63,13 @@ public class LoginPage {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private void enterCredentials(String username, String password) {
+        usernameInput.clear();
+        usernameInput.sendKeys(username);
+        passwordInput.clear();
+        passwordInput.sendKeys(password);
     }
 
 }

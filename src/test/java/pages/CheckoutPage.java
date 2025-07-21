@@ -70,19 +70,10 @@ public class CheckoutPage {
         }
     }
 
-    public static String getCheckoutErrorMessage() {
-        try {
-            return checkoutErrorMessage.getText();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public void errorMessageCheckout(String firstName, String lastName, String zipCode) {
 
         List<Runnable> steps = List.of(
-                () -> {
-                },
+                () -> {},
                 () -> firstNameInput.sendKeys(firstName),
                 () -> lastNameInput.sendKeys(lastName)
         );
@@ -121,5 +112,13 @@ public class CheckoutPage {
     private void finishCheckout() {
         helpers.scrollToElement(By.xpath("//android.view.ViewGroup[@content-desc='test-FINISH']"), 5);
         finishButton.click();
+    }
+
+    private static String getCheckoutErrorMessage() {
+        try {
+            return checkoutErrorMessage.getText();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

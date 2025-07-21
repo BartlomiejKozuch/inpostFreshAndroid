@@ -89,21 +89,16 @@ public class HomePage extends BaseTest {
         sortLowToHighOption.click();
     }
 
+    public WebElement getMenuButton() {
+        return menuButton;
+    }
+
     public List<Double> getVisibleProductPrices() {
         return productPrices.stream()
                 .map(WebElement::getText)
                 .map(text -> text.replace("$", ""))
                 .map(Double::parseDouble)
                 .collect(Collectors.toList());
-    }
-
-
-    private void openMenu() {
-        menuButton.click();
-    }
-
-    private void openShopTab() {
-        shopTabButton.click();
     }
 
     public void addFirstProductToCart() {
